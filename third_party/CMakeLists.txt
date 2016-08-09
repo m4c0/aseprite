@@ -36,6 +36,7 @@ if(WITH_WEBP_SUPPORT)
 endif()
 
 if(NOT USE_SHARED_GIFLIB)
+  include (CheckFunctionExists) # Because they don't do so
   add_subdirectory(giflib)
 endif()
 
@@ -89,6 +90,27 @@ if(NOT USE_SHARED_FREETYPE)
   if(NOT USE_SHARED_LIBPNG)
     add_dependencies(freetype png_static)
   endif()
+endif()
+
+if(NOT USE_SHARED_SKIA)
+  if(NOT USE_SHARED_DEPOT)
+    set(DEPOT_TOOLS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/depot_tools)
+    if(WIN32)
+      set(ENV{PATH} "${DEPOT_TOOLS_PATH};$ENV{PATH}")
+    else()
+      set(ENV{PATH} "${DEPOT_TOOLS_PATH}:$ENV{PATH}")
+    endif()
+  endif()
+
+  execute_process(
+      COMMAND python bin/sync-and-gyp
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/skia)
+  execute_process(
+      COMMAND ninja -C out/Release dm
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/skia)
+
+  # Since we are using our own copy of Skia, do not allow use to modify it
+  set(SKIA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/skia CACHE PATH "Skia source code directory" FORCE)
 endif()
 
 add_subdirectory(simpleini)

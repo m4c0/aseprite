@@ -62,6 +62,8 @@ option(USE_SHARED_LIBLOADPNG "Use your installed copy of libloadpng" off)
 option(USE_SHARED_LIBWEBP "Use your installed copy of libwebp" off)
 option(USE_SHARED_TINYXML "Use your installed copy of tinyxml" off)
 option(USE_SHARED_PIXMAN  "Use your installed copy of pixman" off)
+option(USE_SHARED_DEPOT   "Use your installed copy of depot-tools" off)
+option(USE_SHARED_SKIA    "Use your installed copy of skia" off)
 option(USE_SHARED_FREETYPE "Use shared FreeType library" off)
 option(USE_SHARED_ALLEGRO4 "Use shared Allegro 4 library (without resize support)" off)
 option(ENABLE_MEMLEAK     "Enable memory-leaks detector (only for developers)" off)
@@ -421,11 +423,11 @@ if(WITH_DESKTOP_INTEGRATION)
 endif()
 
 ######################################################################
-# Main ASE targets
-
-add_subdirectory(src)
-
-######################################################################
 # Third party libraries
 
 add_subdirectory(third_party)
+
+######################################################################
+# Main ASE targets
+
+add_subdirectory(src)
